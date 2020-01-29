@@ -39,6 +39,14 @@ class App extends Component {
         <CreateContent
           onSubmit={function(_title, _desc) {
             console.log(_title, _desc);
+            var _addContent = this.state.contents.concat({
+              id: this.state.contents.length,
+              title: _title,
+              desc: _desc
+            });
+            this.setState({
+              contents: _addContent
+            });
           }.bind(this)}
         ></CreateContent>
       );
