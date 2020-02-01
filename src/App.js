@@ -3,6 +3,7 @@ import Subject from "./components/Subject";
 import TOC from "./components/TOC";
 import Control from "./components/Control";
 import ReadContent from "./components/ReadContent";
+import UpdateContent from "./components/UpdateContent";
 import CreateContent from "./components/CreateContent";
 import "./App.css";
 
@@ -21,7 +22,12 @@ class App extends Component {
       ]
     };
   }
-  render() {
+  getReadContent() {
+    var selected = this.state.selected_content_id;
+    var data = this.state.contents[selected];
+    return data;
+  }
+  getContent() {
     var _title,
       _desc,
       _article = null;
@@ -30,9 +36,9 @@ class App extends Component {
       _desc = this.state.welcome.desc;
       _article = <ReadContent title={_title} desc={_desc}></ReadContent>;
     } else if (this.state.mode === "read") {
-      var selected = this.state.selected_content_id;
-      _title = this.state.contents[selected].title;
-      _desc = this.state.contents[selected].desc;
+      //var selected = this.state.selected_content_id;
+      _title = this.getReadContent().title;
+      _desc = this.getReadContent().desc;
       _article = <ReadContent title={_title} desc={_desc}></ReadContent>;
     } else if (this.state.mode === "create") {
       _article = (
@@ -49,7 +55,26 @@ class App extends Component {
           }.bind(this)}
         ></CreateContent>
       );
+    } else if (this.state.mode === "update") {
+      _article = (
+        <UpdateContent
+          data={this.getReadContent()}
+          onSubmit={function(_title, _desc) {
+            var _addContent = this.state.contents.concat({
+              id: this.state.contents.length,
+              title: _title,
+              desc: _desc
+            });
+            this.setState({
+              contents: _addContent
+            });
+          }.bind(this)}
+        ></UpdateContent>
+      );
     }
+    return _article;
+  }
+  render() {
     return (
       <div className="App">
         <Subject
@@ -77,7 +102,7 @@ class App extends Component {
             });
           }.bind(this)}
         ></Control>
-        {_article}
+        {this.getContent()}
       </div>
     );
   }
