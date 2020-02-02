@@ -11,7 +11,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      mode: "create",
+      mode: "welcome",
       selected_content_id: 0,
       subject: { title: "WEB", sub: "World Wide Web!" },
       welcome: { title: "welcome", desc: "Hello, React!" },
@@ -36,7 +36,6 @@ class App extends Component {
       _desc = this.state.welcome.desc;
       _article = <ReadContent title={_title} desc={_desc}></ReadContent>;
     } else if (this.state.mode === "read") {
-      //var selected = this.state.selected_content_id;
       _title = this.getReadContent().title;
       _desc = this.getReadContent().desc;
       _article = <ReadContent title={_title} desc={_desc}></ReadContent>;
@@ -50,7 +49,9 @@ class App extends Component {
               desc: _desc
             });
             this.setState({
-              contents: _addContent
+              contents: _addContent,
+              mode: "read",
+              selected_content_id: this.state.contents.length
             });
           }.bind(this)}
         ></CreateContent>
@@ -59,18 +60,21 @@ class App extends Component {
       _article = (
         <UpdateContent
           data={this.getReadContent()}
-          onSubmit={function(_title, _desc) {
-            var _addContent = this.state.contents.concat({
-              id: this.state.contents.length,
+          onSubmit={function(_id, _title, _desc) {
+            var _modifyContents = Array.from(this.state.contents);
+            _modifyContents[_id] = {
+              id: _id,
               title: _title,
               desc: _desc
-            });
+            };
             this.setState({
-              contents: _addContent
+              contents: _modifyContents,
+              mode: "read"
             });
           }.bind(this)}
         ></UpdateContent>
       );
+    } else if (this.state.mode === "delete") {
     }
     return _article;
   }
@@ -97,9 +101,23 @@ class App extends Component {
         ></TOC>
         <Control
           onChangeMode={function(_mode) {
-            this.setState({
-              mode: _mode
-            });
+            if (_mode === "delete") {
+              if (window.confirm("정말로 삭제하시겠습니까?")) {
+                var _deleteContents = Array.from(this.state.contents);
+                _deleteContents.splice(
+                  Number(this.state.selected_content_id),
+                  1
+                );
+                this.setState({
+                  mode: "welcome",
+                  contents: _deleteContents
+                });
+              }
+            } else {
+              this.setState({
+                mode: _mode
+              });
+            }
           }.bind(this)}
         ></Control>
         {this.getContent()}
