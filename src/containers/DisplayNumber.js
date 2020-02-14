@@ -1,11 +1,14 @@
 import React, { Component } from "react";
+import DisplayNumber from "../redux-components/DisplayNumber";
 import store from "../store";
-export default class DisplayNumber extends Component {
+
+export default class extends Component {
   state = { number: store.getState().number };
   constructor(props) {
     super(props);
     store.subscribe(
       function() {
+        console.log("store값 변경");
         this.setState({
           number: store.getState().number
         });
@@ -13,12 +16,6 @@ export default class DisplayNumber extends Component {
     );
   }
   render() {
-    return (
-      <div>
-        DisplayNumber
-        <br></br>
-        <input type="text" value={this.state.number} readOnly></input>
-      </div>
-    );
+    return <DisplayNumber number={this.state.number}></DisplayNumber>;
   }
 }

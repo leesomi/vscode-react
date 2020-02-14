@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import AddNumberRoot from "./redux-conponents/AddNumberRoot";
-import DisplayNumberRoot from "./redux-conponents/DisplayNumberRoot";
+import AddNumberRoot from "./redux-components/AddNumberRoot";
+import DisplayNumberRoot from "./redux-components/DisplayNumberRoot";
 import "./App.css";
 
 class AppRedux extends Component {
